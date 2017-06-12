@@ -100,7 +100,7 @@
 <meta property="og:url" content="http://yoursite.com/2016/06/30/多任务/index.html">
 <meta property="og:site_name" content="朝元的博客">
 <meta property="og:description" content="用于处理多任务的主流 iOS 框架：  运行循环（run loop） 线程（Thread） 操作（operation） GCD（Grand Central Dispatch）">
-<meta property="og:updated_time" content="2016-11-27T03:44:02.000Z">
+<meta property="og:updated_time" content="2017-06-12T09:03:23.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="多任务">
 <meta name="twitter:description" content="用于处理多任务的主流 iOS 框架：  运行循环（run loop） 线程（Thread） 操作（operation） GCD（Grand Central Dispatch）">
@@ -379,42 +379,13 @@
 <h3 id="NSBlockOperation"><a href="#NSBlockOperation" class="headerlink" title="NSBlockOperation"></a>NSBlockOperation</h3><ul>
 <li>执行一个操作（同步）</li>
 </ul>
-<pre><code>    NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^(){
-        NSLog(@&quot;%@&quot;,[NSThread currentThread]);
-    }];
-    // 开始执行任务
-    [operation start];
-
-    /*************************执行结果****************************/
-    2015-09-17 15:47:58.791 NSOperationTest[3015:191317] &lt;NSThread: 0x7fe6abd02b70&gt;{number = 1, name = main}
-
-可以看到这种方法非常简单，有点类似于 GCD 的写法，是同步执行的。
-
-- 添加多个操作执行（异步）
-
-        // 初始化一个对象
-        NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^(){
-            NSLog(@&quot;1：%@&quot;,[NSThread currentThread]);
-        }];
-        // 再添加3操作
-        [operation addExecutionBlock:^() {
-            NSLog(@&quot;2：%@&quot;, [NSThread currentThread]);
-        }];
-        [operation addExecutionBlock:^() {
-            NSLog(@&quot;3：%@&quot;, [NSThread currentThread]);
-        }];
-        [operation addExecutionBlock:^() {
-            NSLog(@&quot;4：%@&quot;, [NSThread currentThread]);
-        }];
-        // 开始执行任务
-        [operation start];
-
-        /*************************执行结果****************************/
-        2015-09-17 15:55:48.372 NSOperationTest[3113:198447] 1：&lt;NSThread: 0x7f9282f04e10&gt;{number = 1, name = main}
-        2015-09-17 15:55:48.372 NSOperationTest[3113:198530] 2：&lt;NSThread: 0x7f9282e081c0&gt;{number = 2, name = (null)}
-        2015-09-17 15:55:48.372 NSOperationTest[3113:198532] 4：&lt;NSThread: 0x7f9282c1a380&gt;{number = 4, name = (null)}
-        2015-09-17 15:55:48.372 NSOperationTest[3113:198533] 3：&lt;NSThread: 0x7f9282e0ec90&gt;{number = 3, name = (null)}
-</code></pre><p>当添加多个操作时，开启新线程异步执行。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^()&#123;</div><div class="line">		    NSLog(@&quot;%@&quot;,[NSThread currentThread]);</div><div class="line">		&#125;];</div><div class="line">// 开始执行任务</div><div class="line">[operation start];</div><div class="line">	</div><div class="line">/*************************执行结果****************************/</div><div class="line">2015-09-17 15:47:58.791 NSOperationTest[3015:191317] &lt;NSThread: 0x7fe6abd02b70&gt;&#123;number = 1, name = main&#125;</div></pre></td></tr></table></figure>
+<p>可以看到这种方法非常简单，有点类似于 GCD 的写法，是同步执行的。</p>
+<ul>
+<li>添加多个操作执行（异步）</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">// 初始化一个对象</div><div class="line">NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^()&#123;</div><div class="line">    NSLog(@&quot;1：%@&quot;,[NSThread currentThread]);</div><div class="line">&#125;];</div><div class="line">// 再添加3操作</div><div class="line">[operation addExecutionBlock:^() &#123;</div><div class="line">    NSLog(@&quot;2：%@&quot;, [NSThread currentThread]);</div><div class="line">&#125;];</div><div class="line">[operation addExecutionBlock:^() &#123;</div><div class="line">    NSLog(@&quot;3：%@&quot;, [NSThread currentThread]);</div><div class="line">&#125;];</div><div class="line">[operation addExecutionBlock:^() &#123;</div><div class="line">    NSLog(@&quot;4：%@&quot;, [NSThread currentThread]);</div><div class="line">&#125;];</div><div class="line">// 开始执行任务</div><div class="line">[operation start];</div><div class="line">	</div><div class="line">/*************************执行结果****************************/</div><div class="line">2015-09-17 15:55:48.372 NSOperationTest[3113:198447] 1：&lt;NSThread: 0x7f9282f04e10&gt;&#123;number = 1, name = main&#125;</div><div class="line">2015-09-17 15:55:48.372 NSOperationTest[3113:198530] 2：&lt;NSThread: 0x7f9282e081c0&gt;&#123;number = 2, name = (null)&#125;</div><div class="line">2015-09-17 15:55:48.372 NSOperationTest[3113:198532] 4：&lt;NSThread: 0x7f9282c1a380&gt;&#123;number = 4, name = (null)&#125;</div><div class="line">2015-09-17 15:55:48.372 NSOperationTest[3113:198533] 3：&lt;NSThread: 0x7f9282e0ec90&gt;&#123;number = 3, name = (null)&#125;</div></pre></td></tr></table></figure>
+<p>当添加多个操作时，开启新线程异步执行。</p>
 <h3 id="自定义-NSOperation"><a href="#自定义-NSOperation" class="headerlink" title="自定义 NSOperation"></a>自定义 NSOperation</h3><p>自定义 NSOperation 最主要的就是重载 <em>-(void)main</em> 这一方法，在这个方法里面添加需要执行的操作。当执行这个操作时，系统会自动调用 <em>-(void)main</em> 这一方法。</p>
 <pre><code>#import &quot;CustomOpertaionTest.h&quot;
 
