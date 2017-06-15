@@ -100,7 +100,7 @@
 <meta property="og:url" content="http://yoursite.com/2015/12/11/NSString属性什么时候用copy，什么时候用strong/index.html">
 <meta property="og:site_name" content="朝元的博客">
 <meta property="og:description" content="我们在声明一个NSString属性时，对于其内存相关特性，通常有两种选择(基于ARC环境)：strong与copy。那这两者有什么区别呢？什么时候该用strong，什么时候该用copy呢？让我们先来看个例子。">
-<meta property="og:updated_time" content="2015-12-10T16:59:45.000Z">
+<meta property="og:updated_time" content="2017-06-13T08:08:54.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="NSString属性什么时候用copy，什么时候用strong?">
 <meta name="twitter:description" content="我们在声明一个NSString属性时，对于其内存相关特性，通常有两种选择(基于ARC环境)：strong与copy。那这两者有什么区别呢？什么时候该用strong，什么时候该用copy呢？让我们先来看个例子。">
@@ -371,6 +371,7 @@ copy string: 0xa000000006362613, 0x7f86617209c8
 <p>所以，在声明NSString属性时，到底是选择strong还是copy，可以根据实际情况来定。不过，一般我们将对象声明为NSString时，都不希望它改变，所以大多数情况下，我们建议用copy，以免因可变字符串的修改导致的一些非预期问题。</p>
 <p>关于字符串的内存管理，还有些有意思的东西，可以参考 <a href="http://blog.cnbluebox.com/blog/2014/04/16/nsstringte-xing-fen-xi-xue-xi/" target="_blank" rel="external">NSString特性分析学习</a>。</p>
 <p>参考：</p>
+<p><a href="https://segmentfault.com/a/1190000002520583" target="_blank" rel="external">Objective-C属性修饰符strong和copy的区别</a></p>
 <p><a href="http://blog.cnbluebox.com/blog/2014/04/16/nsstringte-xing-fen-xi-xue-xi/" target="_blank" rel="external">NSString特性分析学习</a></p>
 <p><a href="http://stackoverflow.com/questions/387959/nsstring-property-copy-or-retain#" target="_blank" rel="external">NSString property: copy or retain?</a></p>
 
