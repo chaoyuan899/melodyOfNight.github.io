@@ -101,7 +101,7 @@
 <meta property="og:site_name" content="朝元的博客">
 <meta property="og:description" content="先看一下流程图：">
 <meta property="og:image" content="http://yoursite.com/images/objc_msgSend流程.png">
-<meta property="og:updated_time" content="2016-07-17T09:24:42.000Z">
+<meta property="og:updated_time" content="2017-06-27T12:00:09.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="消息传递 objc_msgSend 是如何工作的">
 <meta name="twitter:description" content="先看一下流程图：">
@@ -352,16 +352,30 @@
 <p>在 Object-C 中调用方法最终都会翻译成调用方法实现的的函数指针，并传递给它一个<strong>对象指针</strong>、<strong>一个选择器</strong>和<strong>一组函数参数</strong>。</p>
 <p>objc_msgSend 的工作方式如下：</p>
 <ol>
-<li>检查接受对象是否为 nil 。如果是，调用 nil 处理程序。</li>
+<li>检查接受对象是否为<code>nil</code> 。如果是，调用<code>nil</code>处理程序。</li>
 <li>在垃圾收集环境中（ios 不支持，写在这里是为了内容的完整性），检查有没有锻炼选择器（retain、release、autorelease、retainCount），如果有，返回 self。是的，这意味着在垃圾收集环境中 retainCount 会返回 self，不过你应该用不到。</li>
 <li>检查类缓存中是不是已经有方法实现了，有的话，直接调用。</li>
 <li>比较请求的选择器和类定义的选择器，如果找到了，调用方法实现。</li>
 <li>比较请求的选择器和父类中定义的选择器，然后是父类的父类，以此类推。如果找到选择器，调用方法实现。</li>
-<li>调用 <strong>resolveInstanceMethod:</strong> ( 或者 <strong>resolveClassMethod:</strong> )。如果它返回 YES ，那么重新开始。这一次对象会相应这个选择器，一般是因为它已经调用过 class_addMethod。</li>
-<li>调用 <strong>forwardingTargetForSelector:</strong>，如果返回<strong>非 nil</strong>，那就把消息发送到返回的对象上。这里不要返回 self，否则会形成死循环。</li>
-<li>调用 <strong>methodSignatureForSelector:</strong>，如果返回一个<strong>非 nil</strong>，创建一个 <strong>NSInvocation</strong> 并传给 <strong>forwardInvocation</strong>。</li>
-<li>调用 <strong>doesNotRecognizeSelector:</strong>，默认是抛出异常。</li>
+<li>调用 <code>resolveInstanceMethod:</code> ( 或者 <code>resolveClassMethod:</code> )。如果它返回 <code>YES</code> ，那么重新开始。这一次对象会相应这个选择器，一般是因为它已经调用过 <code>class_addMethod</code>。</li>
+<li>调用 <code>forwardingTargetForSelector:</code>，如果返回<code>非 nil</code>，那就把消息发送到返回的对象上。<strong>这里不要返回 self，否则会形成死循环</strong>。</li>
+<li>调用 <code>methodSignatureForSelector:</code>，如果返回一个<code>非 nil</code>，创建一个 <code>NSInvocation</code> 并传给 <code>forwardInvocation</code>。</li>
+<li>调用 <code>doesNotRecognizeSelector:</code>，默认是抛出异常。</li>
 </ol>
+<p>例子🌰</p>
+<p><strong>Xcode何时会报<code>unrecognized selector</code>的错误</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">- (void)viewDidLoad &#123;</div><div class="line">    [super viewDidLoad];</div><div class="line">    </div><div class="line">    AAPerson *person = [[Person alloc] init];</div><div class="line">    [person test];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>当向<code>AAPerson</code>发送<code>test</code>这个消息时，<code>runtime</code>会根据对象的<code>isa指针</code>找到该对象实际所属的类，然后在该类的方法列表以及父类的方法列表里面找相应的方法运行，如果在最顶层的父类中依然找不到相应的方法实现时，程序在运行时就会报<code>unrecognized selector sent to</code>的错误并且崩溃，但是在此之前，objc的运行时给出了<strong>三次</strong>避免程序崩溃的机会。</p>
+<p> <strong>1、Method resolution</strong></p>
+<p>objc运行时会调用<code>+resolveInstanceMethod:</code>或者<code>+resolveClassMethod:</code>，让我们有机会提供一个函数实现而不导致程序崩溃，如果在这里面添加了函数，系统就会重新启动一次消息发送的过程，否则就会进入到消息的快速转发流程。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">+ (BOOL)resolveInstanceMethod:(SEL)sel &#123;</div><div class="line">    if (sel == NSSelectorFromString(@&quot;test&quot;)) &#123;</div><div class="line">        /**</div><div class="line">          class: 给哪个类添加方法</div><div class="line">          SEL: 添加哪个方法</div><div class="line">          IMP: 方法实现 =&gt; 函数 =&gt; 函数入口 =&gt; 函数名</div><div class="line">          type: 方法类型：void用v来表示，id参数用@来表示，SEL用:来表示</div><div class="line">         */</div><div class="line">        class_addMethod(self, sel, (IMP)test, &quot;v@:@&quot;);</div><div class="line">        return YES;</div><div class="line">    &#125;else &#123;</div><div class="line">        return [super resolveClassMethod:sel];</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void test(id self, SEL _cmd, NSNumber *meter) &#123;</div><div class="line">    NSLog(@&quot;测试 - AAPerson&quot;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>2、Fast forwarding</strong></p>
+<p>如果<code>目标对象</code>实现了<code>-forwardingTargetForSelector:</code>的方法，runtime就会调用这个方法，给我们一个机会把这个消息转发给其他的对象，<strong>只要这个方法返回值不是nil和self</strong>，整个消息发送的过程就会被重启，这时发送的对象会变成我们返回的这个对象，否则就会移到下一步。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">- (id)forwardingTargetForSelector:(SEL)aSelector &#123;</div><div class="line">    AATarget *target = [[AATarget alloc] init];</div><div class="line">    if ([target respondsToSelector:aSelector]) &#123;</div><div class="line">        return target; // 就会去调用AATarget里面的test方法</div><div class="line">    &#125;else &#123;</div><div class="line">        return [super forwardingTargetForSelector: aSelector];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>3、Normal Fowarding</strong></p>
+<p>如果上面两种方法都没有被实现的话，就会来到第三步 —— 普通转发，这是runtime给我们最后一次避免崩溃的机会，首先它会<code>-methodSignatureForSelector:</code>来获得函数的参数和返回值类型，如果返回值为<code>nil</code>，则runtime会发出-<code>doesNotRecognizeSelector:</code> 的消息，程序崩溃。如果返回了一个函数签名，runtime会创建一个<code>NSInvocation</code>对象并发送-<code>forwardInvocation:</code>的消息给目标对象。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">- (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector &#123;</div><div class="line">    NSMethodSignature *signature = [NSMethodSignature signatureWithObjCTypes:&quot;v@:&quot;];</div><div class="line">    return signature;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (void)forwardInvocation:(NSInvocation *)anInvocation &#123;</div><div class="line">    SEL selector = [anInvocation selector];// anInvocation里面保存的是selector／target／参数</div><div class="line">    AATarget *target = [[WWTarget alloc] init];</div><div class="line">    if ([target respondsToSelector:selector]) &#123;</div><div class="line">        [anInvocation invokeWithTarget:target];</div><div class="line">    &#125;    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果上面的三步都没有实现的话，就会调用<code>-doesNotRecognizeSelector:</code>，程序崩溃。</p>
 
       
     </div>
@@ -479,7 +493,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-count">26</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
