@@ -244,6 +244,398 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/17/面试知识点整理-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="朝元">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="朝元的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/17/面试知识点整理-1/" itemprop="url">面试知识点整理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-17T14:33:40+08:00">
+                2018-04-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/17/面试知识点整理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="朝元">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="朝元的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/17/面试知识点整理/" itemprop="url">面试知识点整理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-17T14:33:30+08:00">
+                2018-04-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Part-1"><a href="#Part-1" class="headerlink" title="Part 1"></a>Part 1</h2><p>习题来自：<a href="https://github.com/liberalisman/iOS-InterviewQuestion-collection" target="_blank" rel="external">iOS-InterviewQuestion-collection</a></p>
+<h1 id="0x01-内存管理"><a href="#0x01-内存管理" class="headerlink" title="0x01 内存管理"></a>0x01 内存管理</h1><ul>
+<li><code>@autoreleasrPool</code> 的释放时机？</li>
+</ul>
+<p>在没有手加Autorelease Pool的情况下，Autorelease对象是在当前的<code>runloop</code>迭代结束时释放的，而它能够释放的原因是<strong>系统在每个runloop迭代中都加入了自动释放池Push和Pop</strong></p>
+<p>参考：</p>
+<p><a href="http://blog.sunnyxx.com/2014/10/15/behind-autorelease/" target="_blank" rel="external">幕背后的Autorelease</a></p>
+<p><a href="https://www.jianshu.com/p/cfbe4c010dd0" target="_blank" rel="external">Autorelease对象的释放时机</a></p>
+<p><a href="http://www.samirchen.com/ios-arc/" target="_blank" rel="external">arc 内存管理要点</a></p>
+<hr>
+<p><strong>自动引用计<code>（ARC）</code>数应该遵循的原则?</strong></p>
+<p>不能使用 retain/release/retainCount/autorelease</p>
+<p>不能使用 NSAllocateObject/NSDeallocateObject</p>
+<p>须遵守内存管理的方法命名规则</p>
+<p>不要显示调用dealloc</p>
+<p>使用 @autorelease 块代替NSAutoreleasePool</p>
+<p>不能使用区域（NSZone）</p>
+<p>对象型变量不能作为C语言结固体的成员</p>
+<p>显示转换“id”和”void *”</p>
+<p>参考：</p>
+<p><a href="https://blog.csdn.net/sodawaterer/article/details/72625824" target="_blank" rel="external">OC内存管理教程之ARC(二)——自动引用计数规则</a></p>
+<hr>
+<p><strong>访问<code>__weak</code>修饰的变量，是否已经被注册在了 <code>@autoreleasePool</code> 中？为什么？</strong></p>
+<p>在访问 <code>__weak</code> 修饰的变量时，实际上必定会访问注册到 <code>Autorelease Pool</code> 的对象。如下来年两段代码是相同的效果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">id __weak obj1 = obj0;</div><div class="line">NSLog(@&quot;class=%@&quot;, [obj1 class]);</div><div class="line">// 等同于：</div><div class="line">id __weak obj1 = obj0;</div><div class="line">id __autoreleasing tmp = obj1;</div><div class="line">NSLog(@&quot;class=%@&quot;, [tmp class]);</div></pre></td></tr></table></figure>
+<p>为什么会这样呢？因为 <code>__weak</code> 修饰符只持有对象的弱引用，而在访问对象的过程中，该对象有可能被废弃，如果把被访问的对象注册到 Autorelease Pool 中，就能保证 Autorelease Pool 被销毁前对象是存在的。</p>
+<p>参考：</p>
+<p><a href="http://www.samirchen.com/ios-arc/" target="_blank" rel="external">arc 内存管理要点</a></p>
+<hr>
+<p><strong>ARC 的 retainCount 怎么存储的？</strong></p>
+<p>the reference counts for most objects are stored in <strong>hash tables</strong>. Have a look at the <code>_objc_rootRetain</code> function in <code>runtime/objc-arr.mm</code></p>
+<p>参考：</p>
+<p><a href="https://stackoverflow.com/questions/10109645/where-is-the-retain-count-stored-for-nsobjects-in-objective-c" target="_blank" rel="external">Where is the retain count stored for NSObjects in Objective C
+</a></p>
+<hr>
+<p><strong>简要说一下 @autoreleasePool 的数据结构</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">AutoreleasePoolPage &#123;</div><div class="line">    magic_t const magic;</div><div class="line">    id *next;</div><div class="line">    pthread_t const thread;</div><div class="line">    AutoreleasePoolPage * const parent;</div><div class="line">    AutoreleasePoolPage *child;</div><div class="line">    uint32_t const depth;</div><div class="line">    uint32_t hiwat;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>magic用来校验AutoreleasePoolPage结构是否完整；</p>
+<p>next指向第一个可用的地址；</p>
+<p>thread指向当前的线程；</p>
+<p>parent指向父类</p>
+<p>child指向子类</p>
+<p>参考：</p>
+<p><a href="https://www.jianshu.com/p/66282c943c04" target="_blank" rel="external">深入理解@autoreleasepool</a></p>
+<hr>
+<p><strong><code>__weak</code> 和 <code>_Unsafe_Unretain</code> 的区别</strong></p>
+<p>weak与unsafe_unretained的区别在于，<code>weak</code>会将被释放指针赋值为nil，而<code>unsafe_unretained</code>则会成为野指针。</p>
+<hr>
+<p><strong>为什么已经有了 ARC ,但还是需要 @AutoreleasePool 的存在？</strong></p>
+<p>ARC 并不是舍弃了 <code>@autoreleasepool</code>，而是在编译阶段帮你插入必要的 <code>retain</code>/<code>release</code>/<code>autorelease</code> 的代码调用。</p>
+<p>所以，跟你想象的不一样，ARC 之下依然是延时释放的，依然是依赖于 <code>NSAutoreleasePool</code>，跟非 ARC 模式下手动调用那些函数本质上毫无差别，只是编译器来做会保证引用计数的正确性。</p>
+<hr>
+<p><strong><code>__weak</code> 属性修饰的变量，如何实现在变量没有强引用后自动置为 nil</strong></p>
+<p>runtime 对注册的类， 会进行布局，对于 weak 对象会放入一个 hash 表中。 用 weak 指向的对象内存地址作为 key，当此对象的引用计数为0的时候会 dealloc，假如 weak 指向的对象内存地址是a，那么就会以a为键， 在这个 weak 表中搜索，找到所有以a为键的 weak 对象，从而设置为 nil。</p>
+<hr>
+<p><strong>说一下对 retain,copy,assign,weak,_Unsafe_Unretain 关键字的理解</strong></p>
+<p><code>assign</code>表明 setter 仅仅是一个简单的赋值操作，通常用于基本的数值类型，例如CGFloat和NSInteger。</p>
+<p><code>weak</code>表明属性定义了一个非拥有者关系。当给属性设定一个新值的时候，这个值不会进行 retain，旧值也不会进行 release， 而是进行类似 assign 的操作。不过当属性指向的对象被销毁时，该属性会被置为nil。</p>
+<p><code>strong</code>表明属性定义了一个非拥有者关系。当给属性设定一个新值的时候，这个值不会进行 retain，旧值也不会进行 release， 而是进行类似 assign 的操作。不过当属性指向的对象被销毁时，该属性会被置为nil。</p>
+<p><code>copy</code>类似于 strong，不过在赋值时进行 copy 操作而不是 retain 操作。通常在需要保留某个不可变对象（NSString最常见），并且防止它被意外改变时使用。</p>
+<p><code>unsafe_unretained</code>的语义和 assign 类似，不过是用于对象类型的，表示一个非拥有(unretained)的，同时也不会在对象被销毁时置为nil的(unsafe)关系。</p>
+<p>参考：</p>
+<p><a href="https://segmentfault.com/a/1190000004943276" target="_blank" rel="external">Objective-C 内存管理——你需要知道的一切</a></p>
+<p><a href="http://melodyofnight.github.io/2015/12/11/NSString%E5%B1%9E%E6%80%A7%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E7%94%A8copy%EF%BC%8C%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E7%94%A8strong/#more" target="_blank" rel="external">NSString属性什么时候用copy，什么时候用strong?</a></p>
+<hr>
+<p><strong>ARC 在编译时做了哪些工作</strong></p>
+<p>待查~</p>
+<hr>
+<p><strong>ARC 在运行时做了哪些工作</strong></p>
+<p>待查~</p>
+<hr>
+<p><strong>函数返回一个对象时，会对对象 autorelease 么？为什么？</strong></p>
+<p>参考 <a href="http://www.samirchen.com/ios-arc/" target="_blank" rel="external">arc 内存管理要点</a> 这篇。</p>
+<hr>
+<p><strong>说一下什么是 悬垂指针？什么是 野指针?</strong></p>
+<p>悬垂指针（dangling pointer）一般是说指向已经被释放的自由区内存（free store）的指针，野指针（wild pointer）则一般是未经初始化的指针。前者曾经有效过，后者从未有效过。</p>
+<p>参考：</p>
+<p><a href="http://www.cnblogs.com/submarine/archive/2013/03/02/2940169.html" target="_blank" rel="external">悬垂指针（Dangling pointer）和野指针（Wild pointer）</a></p>
+<hr>
+<p><strong>内存管理默认的关键字是什么？</strong></p>
+<p>strong</p>
+<hr>
+<p><strong>内存中的5大区分别是什么？</strong></p>
+<p>内存5大区:堆,栈,方法区,全局区,常量区<br>栈:不需要手动管理内存,会自动清理栈中的内存<br>堆: 需要手动管理内存<br>静态区:又称全局区<br>常量区: 储存常量的地方<br>方法区: 存放函数体的二进制代码</p>
+<hr>
+<p><strong>是否了解 深拷贝 和 浅拷贝 的概念，集合类深拷贝如何实现？</strong></p>
+<p>待查~</p>
+<hr>
+<p><strong>BAD_ACCESS 在什么情况下出现?</strong></p>
+<ul>
+<li>访问了野指针，比如对一个已经释放的对象执行了release、访问已经释放对象的成员变量或者发消息。</li>
+<li>死循环</li>
+</ul>
+<hr>
+<h1 id="0x02-Runtime"><a href="#0x02-Runtime" class="headerlink" title="0x02 Runtime"></a>0x02 Runtime</h1><p><strong>类对象的数据结构？</strong></p>
+<p>Objective-C类是由<code>Class</code>类型来表示的，它实际上是一个指向<code>objc_class</code>结构体的指针。它的定义如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">typedef struct objc_class *Class;</div></pre></td></tr></table></figure>
+<p>查看<code>objc/runtime.h</code>中<code>objc_class</code>结构体的定义如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">struct objc_class &#123;</div><div class="line">    Class isa  OBJC_ISA_AVAILABILITY;</div><div class="line">#if !__OBJC2__</div><div class="line">    Class super_class                   	OBJC2_UNAVAILABLE;	// 父类</div><div class="line">    const char *name                      	OBJC2_UNAVAILABLE;	// 类名</div><div class="line">    long version                          	OBJC2_UNAVAILABLE;	// 类的版本信息，默认为0</div><div class="line">    long info                            	OBJC2_UNAVAILABLE;	// 类信息，供运行期使用的一些位标识</div><div class="line">    long instance_size                   	OBJC2_UNAVAILABLE;	// 该类的实例变量大小</div><div class="line">    struct objc_ivar_list *ivars         	OBJC2_UNAVAILABLE;	// 该类的成员变量链表</div><div class="line">    struct objc_method_list **methodLists 	OBJC2_UNAVAILABLE;	// 方法定义的链表</div><div class="line">    struct objc_cache *cache              	OBJC2_UNAVAILABLE;	// 方法缓存</div><div class="line">    struct objc_protocol_list *protocols 	OBJC2_UNAVAILABLE;	// 协议链表</div><div class="line">#endif</div><div class="line">&#125; OBJC2_UNAVAILABLE;</div></pre></td></tr></table></figure>
+<p>在这个定义中，下面几个字段是我们感兴趣的</p>
+<ol>
+<li><code>isa</code>：需要注意的是在Objective-C中，所有的类自身也是一个对象，这个对象的<code>Class</code>里面也有一个<code>isa</code>指针，它指向<code>metaClass</code>(元类)，我们会在后面介绍它。</li>
+<li><code>super_class</code>：指向该类的父类，如果该类已经是最顶层的根类(如NSObject或NSProxy)，则<code>super_class</code>为NULL。</li>
+<li><code>cache</code>：用于缓存最近使用的方法。一个接收者对象接收到一个消息时，它会根据isa指针去查找能够响应这个消息的对象。在实际使用中，这个对象只有一部分方法是常用的，很多方法其实很少用或者根本用不上。这种情况下，如果每次消息来时，我们都是methodLists中遍历一遍，性能势必很差。这时，<code>cache</code>就派上用场了。在我们每次调用过一个方法后，这个方法就会被缓存到<code>cache</code>列表中，下次调用的时候runtime就会优先去cache中查找，如果<code>cache</code>没有，才去<code>methodLists</code>中查找方法。这样，对于那些经常用到的方法的调用，但提高了调用的效率。</li>
+<li><code>version</code>：我们可以使用这个字段来提供类的版本信息。这对于对象的序列化非常有用，它可是让我们识别出不同类定义版本中实例变量布局的改变。</li>
+</ol>
+<p>参考：</p>
+<p><a href="http://southpeak.github.io/2014/10/25/objective-c-runtime-1/" target="_blank" rel="external">Objective-C Runtime 运行时之一：类与对象</a></p>
+<hr>
+<p><strong>实例对象的数据结构？</strong></p>
+<p>实例对象都是一个<code>id</code>类型的对象，查看<code>objc.h</code>中对<code>id</code>的描述：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">#if !OBJC_TYPES_DEFINED</div><div class="line">/// An opaque type that represents an Objective-C class.</div><div class="line">typedef struct objc_class *Class;</div><div class="line"></div><div class="line">/// Represents an instance of a class.</div><div class="line">struct objc_object &#123;</div><div class="line">    Class _Nonnull isa  OBJC_ISA_AVAILABILITY;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">/// A pointer to an instance of a class.</div><div class="line">typedef struct objc_object *id;</div><div class="line">#endif</div></pre></td></tr></table></figure>
+<p>查看源文件，可以看出<code>id</code>其实就是一个指向<code>objc_object</code>结构体指针，它包含一个<code>Class</code> isa 成员。所以实例对象的数据结构实际上就是一个<code>Class</code>的数据结构。</p>
+<hr>
+<p><strong>元类对象的数据结构?</strong></p>
+<p>meta-class 是 Class 对象的类。每个 Class 都有个不同的自己的 meta-class（因此每个 Class 都可以有一个自己不同的方法列表）。也就是说每个类的 Class 不完全相同。</p>
+<p>参考：</p>
+<p><a href="http://www.cocoachina.com/industry/20131210/7508.html" target="_blank" rel="external">Objective-C 中的 Meta-class 是什么？</a></p>
+<hr>
+<p><strong><code>Category</code> 的实现原理？以及如何实现添加一个属性？</strong></p>
+<p>参考：</p>
+<p><a href="https://juejin.im/post/5a9d14856fb9a028e52d5568" target="_blank" rel="external">从源码解读Category实现原理</a></p>
+<p><a href="https://tech.meituan.com/DiveIntoCategory.html" target="_blank" rel="external">深入理解Objective-C：Category</a></p>
+<hr>
+<p><strong>如何运用 <code>Runtime</code> 字典转模型？</strong></p>
+<p>参考：</p>
+<p><a href="http://www.cnblogs.com/haojuncong/p/4539711.html" target="_blank" rel="external">利用运行时(runtime)字典转模型</a></p>
+<p>简单的版本如上，其他还有一些关键字的不能作为key值得还要映射一下的。还有嵌套的等等其他的要考虑。</p>
+<hr>
+<p><strong><code>Category</code> 有哪些用途？</strong></p>
+<p>1）无需创建继承类，实现对已有类扩展。并且可以被扩展的类的所有子类自动继承。</p>
+<p>2）可以用来修复没有源码类的bug。</p>
+<p>3）对于一个类多个开发人员维护的情况，可以根据不同用途创建不同分类。</p>
+<p>注意点：</p>
+<p>1）不能在分类中重写系统方法，因为会把系统的功能给覆盖掉，而且分类中不能调用super。但是，这种情况可以用来修复，没有源码的类中方法有Bug的情况。</p>
+<hr>
+<p><strong><code>Category</code> 和 <code>Extension</code> 有什么区别？</strong></p>
+<p>1)<code>Category</code> 的加载在<strong>运行时</strong>，<code>Extension</code> 的加载在<strong>编译时</strong>。</p>
+<p>2) <code>Extension</code> 不能给没有源码的类添加方法。</p>
+<p>3) <code>Extension</code> 是一个匿名的 <code>Category</code> 。</p>
+<hr>
+<p><strong>说一下 <code>Method Swizzling</code>? 说一下在实际开发中你在什么场景下使用过?</strong></p>
+<p>参考：</p>
+<p><a href="http://nshipster.cn/method-swizzling/" target="_blank" rel="external">Method Swizzling</a></p>
+<p>关于<code>Method Swizzling</code>踩过的坑，</p>
+<p>参考这里</p>
+<p><a href="http://melodyofnight.github.io/2017/08/30/Method-Swizzing/#more" target="_blank" rel="external">Method Swizzling</a></p>
+<hr>
+<p><strong>如何实现动态添加方法和属性？</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">//动态创建类</div><div class="line">Class person = objc_allocateClassPair([NSObject class], &quot;Person&quot;, 0);</div><div class="line">//添加变量</div><div class="line">class_addIvar(person, &quot;name&quot;, sizeof(NSString *), 0, &quot;@&quot;);</div><div class="line">//添加函数  sayHi</div><div class="line">class_addMethod(person, @selector(sayHi:), (IMP)sayHi, &quot;v@:&quot;);</div><div class="line">objc_registerClassPair(person);</div><div class="line">//初始化一个person对象</div><div class="line">id Tom = [[person alloc] init];</div><div class="line">[Tom setValue:@&quot;Tom&quot; forKey:@&quot;name&quot;];</div><div class="line">[Tom sayHi:@&quot;Jeck&quot;];</div></pre></td></tr></table></figure>
+<p>上述代码，我们通过<code>objc_allocateClassPair()</code>创建了一个继承<code>NSObject</code>的<code>person</code>的子类，然后通过<code>objc_registerClassPair()</code>这个函数注册了<code>person</code>类，下面我们就可以使用这个类了，使用之前我们在给<code>person</code>类中添加一个<code>name</code>属性和<code>sayHi:</code>方法，分别通过<code>class_addIvar()</code>和<code>class_addMethod()</code>来添加，接下来我们要实现我们添加的<code>sayHi:</code>方法，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">//这个函数必须写，要不然xcode会报错，实际运行的时候，这个函数是不会调用的</div><div class="line">-(void)sayHi:(NSString *)name</div><div class="line">&#123;</div><div class="line">    </div><div class="line">&#125;</div><div class="line"></div><div class="line">//运行的时候，会调用这个方法</div><div class="line">static void sayHi(id self, SEL _cmd, NSString *name)</div><div class="line">&#123;</div><div class="line">    Ivar n = class_getInstanceVariable([self class], &quot;name&quot;);</div><div class="line">    id a = object_getIvar(self, n);</div><div class="line">    NSLog(@&quot;hello %@,my name is %@&quot;,name,a);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>static void sayHi(id self, SEL _cmd, NSString *name)</code>这个就是我们运行时候调用的方法，其中<code>self</code>使我们使用<code>person</code>创建的对象<code>Tom</code>,<code>_cmd</code>是调用的方法名，<code>name</code>就是传过来的参数，如果有多个参数，可以写成<code>static void sayHi(id self, SEL _cmd, NSString *name,...)</code>省略号可以填写你愿意添加的参数。</p>
+<p>这样我们就利用runtime动态的创建了一个person类，包括了name属性和sayHi:方法，运行如结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">RunTimeDemo[46329:7242266] hello Jeck,my name is Tom</div></pre></td></tr></table></figure>
+<p>参考：</p>
+<p><a href="https://github.com/coolnameismy/ios-tips/blob/master/0_Foundation/runtime%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95.md" target="_blank" rel="external">runtime常用方法</a></p>
+<hr>
+<p><strong>说一下对 isa 指针的理解， 对象的isa 指针指向哪里？（注意区分不同对象）</strong></p>
+<p>网上有2种说法：</p>
+<p>1）<code>isa</code> 是指向元类的指针，不了解元类的可以看 <a href="http://www.cocoachina.com/industry/20131210/7508.html" target="_blank" rel="external">Objective-C 中的 Meta-class 是什么？</a></p>
+<p>2) 任何直接或间接继承了<code>NSObject</code>的类，它的实例对象(instacne objec)中都有一个<code>isa</code>指针，指向它的类对象(class object)。这个类对象(class object)中存储了关于这个实例对象(instace object)所属的类的定义的一切：包括<strong>变量</strong>，<strong>方法</strong>，<strong>遵守的协议</strong>等等。</p>
+<p>参考：</p>
+<p><a href="http://www.cnblogs.com/csutanyu/archive/2011/12/12/Objective-C_memory_layout.html" target="_blank" rel="external">Objective-C内存布局</a></p>
+<p><a href="http://www.cocoachina.com/industry/20131210/7508.html" target="_blank" rel="external">Objective-C 中的 Meta-class 是什么？</a></p>
+<hr>
+<p><strong>一个 NSObject 对象占用多少内存空间？</strong></p>
+<p>通过 <code>size_t class_getInstanceSize ( Class cls )</code>接口可以获取<code>NSObject</code> 对象占用内存空间大小。</p>
+<hr>
+<p><strong>说一下对 <code>class_rw_t</code> 的理解？</strong></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/30/Method-Swizzing/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1171,243 +1563,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/01/队列/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="朝元">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="朝元的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/04/01/队列/" itemprop="url">队列</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-01T18:28:21+08:00">
-                2017-04-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>队列是一种先进先出（First In First Out）的线性表，简称 <strong>FIFO</strong> 。允许插入的一端称为队尾，允许删除的一端称为队头。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/04/01/队列/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/01/DTS、PTS-解惑/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="朝元">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="朝元的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/04/01/DTS、PTS-解惑/" itemprop="url">DTS、PTS 解惑</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-01T16:34:52+08:00">
-                2017-04-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="I、P、B-帧"><a href="#I、P、B-帧" class="headerlink" title="I、P、B 帧"></a>I、P、B 帧</h3><p>要搞懂 DTS 和 PTS ，首先要先了解一下 I、P、B 帧。</p>
-<ul>
-<li><strong>I 帧 ：</strong> 帧内编码帧 又称intra picture，I 帧通常是每个 GOP（MPEG 所使用的一种视频压缩技术）的第一个帧，经过适度地压缩，做为随机访问的参考点，可以当成图象。I帧可以看成是一个图像经过压缩后的产物。可独立解码。</li>
-<li><strong>P 帧 ：</strong> 前向预测编码帧 又称predictive-frame，P 帧图像只采用前向时间预测，可以提高压缩效率和图像质量。</li>
-<li><strong>B 帧 ：</strong> 双向预测内插编码帧 又称bi-directional interpolated prediction frame，可以大大提高压缩倍数。</li>
-</ul>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/04/01/DTS、PTS-解惑/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1457,7 +1612,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">33</span>
+                <span class="site-state-item-count">35</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1521,7 +1676,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

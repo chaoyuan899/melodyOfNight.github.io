@@ -99,7 +99,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/08/30/Method-Swizzing/index.html">
 <meta property="og:site_name" content="朝元的博客">
 <meta property="og:description" content="关于 Method Swizzling 其实已经算是挺熟悉了的，但今天在用的时候遇到了一个坑，觉得还是有必要记录一下的。">
-<meta property="og:updated_time" content="2017-09-27T02:15:11.000Z">
+<meta property="og:updated_time" content="2017-09-29T02:05:45.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Method Swizzing">
 <meta name="twitter:description" content="关于 Method Swizzling 其实已经算是挺熟悉了的，但今天在用的时候遇到了一个坑，觉得还是有必要记录一下的。">
@@ -319,12 +319,16 @@
 <p>后来发现是需要使用 <code>class_addMethod</code> 为类B动态添加一个方法，然后用<code>class_getInstanceMethod</code> 重新获取地址后在进行交换才可以。</p>
 <p>具体实现如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">//</div><div class="line">//  PlayStatisticMgr.m</div><div class="line">//  kugou</div><div class="line"></div><div class="line"></div><div class="line">+(void)load &#123;</div><div class="line">    static dispatch_once_t onceToken;</div><div class="line">    dispatch_once(&amp;onceToken, ^&#123;</div><div class="line">        Method origMethod = class_getInstanceMethod([KGTingPlayerManager class], @selector(setDataSource:userData:playType:audioType:start:end:stopPlayersExceptMember:));</div><div class="line">        Method newMethod = class_getInstanceMethod([self class], @selector(aa_setDataSource:userData:playType:audioType:start:end:stopPlayersExceptMember:));</div><div class="line">        </div><div class="line">        class_addMethod([KGTingPlayerManager class], @selector(aa_setDataSource:userData:playType:audioType:start:end:stopPlayersExceptMember:), method_getImplementation(newMethod), method_getTypeEncoding(newMethod));</div><div class="line">        </div><div class="line">        newMethod = class_getInstanceMethod([KGTingPlayerManager class], @selector(aa_setDataSource:userData:playType:audioType:start:end:stopPlayersExceptMember:));</div><div class="line">        </div><div class="line">        method_exchangeImplementations(origMethod, newMethod);</div><div class="line">        </div><div class="line">    &#125;);</div><div class="line">    </div><div class="line">&#125;</div><div class="line"></div><div class="line">- (void)aa_setDataSource:(void*)object userData:(NSObject*)userData playType:(PLAY_TYPE)playType audioType:(int)audioType start:(NSTimeInterval)startMs end:(NSTimeInterval)endMs stopPlayersExceptMember:(NSArray&lt;KGPlayControlProtocol&gt;*)members</div><div class="line">&#123;</div><div class="line">    NSLog(@&quot;hook selector setDataSource:userData:playType:audioType:start:end:stopPlayersExceptMember:&quot;);</div><div class="line">    [self aa_setDataSource:object userData:userData playType:playType audioType:audioType start:startMs end:endMs stopPlayersExceptMember:members];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note</strong>: 尽量把交换方法写在 dispatch_once 中，保证只执行一次。</p>
+</blockquote>
 <p>最后，把该 swizzing 方法包装成一个通用方法：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">+(void)exchangeClass:(Class)cls_a selector:(SEL)sel_a withClass:(Class)cls_b selector:(SEL)sel_b &#123;</div><div class="line">    Method origMethod = class_getInstanceMethod(cls_a, sel_a);</div><div class="line">    Method newMethod = class_getInstanceMethod(cls_b, sel_b);</div><div class="line">    </div><div class="line">    //要为cls_a 添加 sel_b selector ，要不然会报找不到方法</div><div class="line">    class_addMethod(cls_a, sel_b, method_getImplementation(newMethod), method_getTypeEncoding(newMethod));</div><div class="line">    </div><div class="line">    //需要重新获取method，要不然会进入死循环！</div><div class="line">    newMethod = class_getInstanceMethod(cls_a, sel_b);</div><div class="line">    </div><div class="line">    method_exchangeImplementations(origMethod, newMethod);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>当你如下在 swizzling dealloc 的时候 XCode 会报错：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[KGCorePlayerManager exchangeClass:[KGCorePlayerManager class] selector:@selector(ex_dealloc) withClass:[KGCorePlayerManager class] selector:@selector(dealloc)]; //ARC forbids use of &apos;dealloc&apos; in a @selector</div></pre></td></tr></table></figure>
 <p>那是因为 ARC 中不允许直接调用 dealloc 方法了。</p>
 <p>可以用 <code>NSSelectorFromString(@&quot;dealloc&quot;)</code> 替换<code>@selector(dealloc)</code>这样取巧的方式绕过编译器的检查。</p>
+<p>没有验证过这种骗过编译器的方式在真正运行的时候是否会出现运行时错误，查资料的时候，<a href="https://stackoverflow.com/questions/19298084/how-to-enforce-using-retaincount-method-and-dealloc-selector-under-arc" target="_blank" rel="external">stackoverflow</a> 上给出的建议是使用 associated 的方式为观察的类添加一个观察变量，在观察类销毁的时候，你就可以知道了。确实是一种不错的思路，强烈推荐看一下！</p>
 <p><strong>参考链接：</strong></p>
 <ul>
 <li><p><a href="https://my.oschina.net/quntion/blog/614312" target="_blank" rel="external">objc运行时，方法交换（交换方法）踩过的坑</a></p>
@@ -377,6 +381,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/17/面试知识点整理/" rel="prev" title="面试知识点整理">
+                面试知识点整理 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -439,7 +447,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">33</span>
+                <span class="site-state-item-count">35</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -503,7 +511,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
