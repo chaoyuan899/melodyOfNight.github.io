@@ -244,7 +244,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/17/面试知识点整理-1/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/24/设置UITableViewCell之间的间距-推荐第四种/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="朝元">
@@ -263,7 +263,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/04/17/面试知识点整理-1/" itemprop="url">面试知识点整理</a></h1>
+                <a class="post-title-link" href="/2018/05/24/设置UITableViewCell之间的间距-推荐第四种/" itemprop="url">设置UITableViewCell之间的间距(推荐第四种)</a></h1>
         
 
         <div class="post-meta">
@@ -275,8 +275,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-17T14:33:40+08:00">
-                2018-04-17
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-24T11:17:26+08:00">
+                2018-05-24
               </time>
             
 
@@ -312,7 +312,16 @@
       
         
           
-            
+            <p>1.设置假的间距，我们在<code>tableviewcell</code>的<code>contentView</code>上添加一个view，比如让其距离上下左右的距离都是<code>10</code>；这个方法是最容易想到的；</p>
+<p>2.用<code>UIContentView</code>来代替<code>tableview</code>，然后通过下面这个函数来设置<code>UICollectionViewCell</code>的上下左右的间距；</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">//协议中的方法，用于返回单元格的大小  </div><div class="line">- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath&#123;  </div><div class="line">    return CGSizeMake(ScreenWidth-20,150);  </div><div class="line">&#125;  </div><div class="line">//协议中的方法，用于返回整个CollectionView上、左、下、右距四边的间距  </div><div class="line">- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section&#123;  </div><div class="line">    //上、左、下、右的边距  </div><div class="line">    return UIEdgeInsetsMake(10, 10, 10, 10);  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>3.用控件<code>tableview</code>，比如有十条数据，那就给<code>tableview</code>分十组，每组只放一条数据，也就是一个<code>cell</code>，然后设置<code>UICollectionViewCell</code>的<code>head view</code>和<code>foot view</code>来设置<code>cell</code>的间距，但是这个方法只能设置上下间距，如果想设置距离屏幕左右的距离，可以设置<code>uitableview</code>距离左右的距离；<code>uitableview</code>的<code>style</code>为<code>UITableViewStyleGrouped</code>；不然<code>headview</code>会浮动；</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView&#123;  </div><div class="line">    return 10;  </div><div class="line">&#125;  </div><div class="line">  </div><div class="line">- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section&#123;  </div><div class="line">    return 1;  </div><div class="line">&#125;  </div><div class="line">  </div><div class="line">- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath&#123;  </div><div class="line">    return 50;  </div><div class="line">&#125;  </div><div class="line">  </div><div class="line">- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section&#123;  </div><div class="line">    return 10;  </div><div class="line">&#125;  </div><div class="line">  </div><div class="line">- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section&#123;  </div><div class="line">    return 0.00001;  </div><div class="line">&#125;  </div><div class="line">  </div><div class="line">- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section&#123;  </div><div class="line">    UIView *headView = [[UIView alloc]init];  </div><div class="line">    headView.backgroundColor = [UIColor redColor];  </div><div class="line">    return headView;  </div><div class="line">&#125;  </div><div class="line">  </div><div class="line">- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath&#123;  </div><div class="line">    static NSString *TableSampleIdentifier = @&quot;cellStr&quot;;  </div><div class="line">    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:TableSampleIdentifier];  </div><div class="line">    if (cell == nil) &#123;  </div><div class="line">        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:TableSampleIdentifier];  </div><div class="line">    &#125;  </div><div class="line">    return cell;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>4.重新设置的<code>UITableViewCellframe</code>。</p>
+<p>代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">#import &quot;MyViewCell.h&quot;  </div><div class="line">  </div><div class="line">@implementation MyViewCell  </div><div class="line">  </div><div class="line">- (void)awakeFromNib &#123;  </div><div class="line">    [super awakeFromNib];  </div><div class="line">    // Initialization code  </div><div class="line">&#125;  </div><div class="line">  </div><div class="line">- (void)setFrame:(CGRect)frame&#123;  </div><div class="line">    frame.origin.x += 10;  </div><div class="line">    frame.origin.y += 10;  </div><div class="line">    frame.size.height -= 10;  </div><div class="line">    frame.size.width -= 20;  </div><div class="line">    [super setFrame:frame];  </div><div class="line">&#125;  </div><div class="line">  </div><div class="line">- (void)setSelected:(BOOL)selected animated:(BOOL)animated &#123;  </div><div class="line">    [super setSelected:selected animated:animated];  </div><div class="line">  </div><div class="line">    // Configure the view for the selected state  </div><div class="line">&#125;  </div><div class="line">  </div><div class="line">@end</div></pre></td></tr></table></figure>
+<p>参考链接： <a href="https://blog.csdn.net/u014220518/article/details/51995989" target="_blank" rel="external">这里</a></p>
+
           
         
       
@@ -422,11 +431,11 @@
 
       
         
-          
-            <h2 id="Part-1"><a href="#Part-1" class="headerlink" title="Part 1"></a>Part 1</h2><p>习题来自：<a href="https://github.com/liberalisman/iOS-InterviewQuestion-collection" target="_blank" rel="external">iOS-InterviewQuestion-collection</a></p>
-<h1 id="0x01-内存管理"><a href="#0x01-内存管理" class="headerlink" title="0x01 内存管理"></a>0x01 内存管理</h1><ul>
-<li><code>@autoreleasrPool</code> 的释放时机？</li>
-</ul>
+          <h1 id="Part-0"><a href="#Part-0" class="headerlink" title="Part 0"></a>Part 0</h1><p>看以下习题前可以先看看下面的别人整理好的面试题：</p>
+<p><a href="https://github.com/ChenYilong/iOSInterviewQuestions/blob/master/01%E3%80%8A%E6%8B%9B%E8%81%98%E4%B8%80%E4%B8%AA%E9%9D%A0%E8%B0%B1%E7%9A%84iOS%E3%80%8B%E9%9D%A2%E8%AF%95%E9%A2%98%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88/%E3%80%8A%E6%8B%9B%E8%81%98%E4%B8%80%E4%B8%AA%E9%9D%A0%E8%B0%B1%E7%9A%84iOS%E3%80%8B%E9%9D%A2%E8%AF%95%E9%A2%98%E5%8F%82%E8%80%83%E7%AD%94%E6%A1%88%EF%BC%88%E4%B8%8B%EF%BC%89.md" target="_blank" rel="external">iOSInterviewQuestions</a><strong>【强烈推荐看】</strong></p>
+<hr>
+<h1 id="Part-1"><a href="#Part-1" class="headerlink" title="Part 1"></a>Part 1</h1><p>习题来自：<a href="https://github.com/liberalisman/iOS-InterviewQuestion-collection" target="_blank" rel="external">iOS-InterviewQuestion-collection</a></p>
+<h2 id="0x01-内存管理"><a href="#0x01-内存管理" class="headerlink" title="0x01 内存管理"></a>0x01 内存管理</h2><p><strong><code>@autoreleasrPool</code> 的释放时机？</strong></p>
 <p>在没有手加Autorelease Pool的情况下，Autorelease对象是在当前的<code>runloop</code>迭代结束时释放的，而它能够释放的原因是<strong>系统在每个runloop迭代中都加入了自动释放池Push和Pop</strong></p>
 <p>参考：</p>
 <p><a href="http://blog.sunnyxx.com/2014/10/15/behind-autorelease/" target="_blank" rel="external">幕背后的Autorelease</a></p>
@@ -481,7 +490,7 @@
 <p><strong>说一下对 retain,copy,assign,weak,_Unsafe_Unretain 关键字的理解</strong></p>
 <p><code>assign</code>表明 setter 仅仅是一个简单的赋值操作，通常用于基本的数值类型，例如CGFloat和NSInteger。</p>
 <p><code>weak</code>表明属性定义了一个非拥有者关系。当给属性设定一个新值的时候，这个值不会进行 retain，旧值也不会进行 release， 而是进行类似 assign 的操作。不过当属性指向的对象被销毁时，该属性会被置为nil。</p>
-<p><code>strong</code>表明属性定义了一个非拥有者关系。当给属性设定一个新值的时候，这个值不会进行 retain，旧值也不会进行 release， 而是进行类似 assign 的操作。不过当属性指向的对象被销毁时，该属性会被置为nil。</p>
+<p><code>strong</code>表明属性定义一个拥有者关系。当给属性设定一个新值的时候，首先这个值进行 retain ，旧值进行 release ，然后进行赋值操作。</p>
 <p><code>copy</code>类似于 strong，不过在赋值时进行 copy 操作而不是 retain 操作。通常在需要保留某个不可变对象（NSString最常见），并且防止它被意外改变时使用。</p>
 <p><code>unsafe_unretained</code>的语义和 assign 类似，不过是用于对象类型的，表示一个非拥有(unretained)的，同时也不会在对象被销毁时置为nil的(unsafe)关系。</p>
 <p>参考：</p>
@@ -489,7 +498,7 @@
 <p><a href="http://melodyofnight.github.io/2015/12/11/NSString%E5%B1%9E%E6%80%A7%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E7%94%A8copy%EF%BC%8C%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E7%94%A8strong/#more" target="_blank" rel="external">NSString属性什么时候用copy，什么时候用strong?</a></p>
 <hr>
 <p><strong>ARC 在编译时做了哪些工作</strong></p>
-<p>待查~</p>
+<p>根据代码执行的上下文语境，在适当的位置插入 <code>retain</code>，<code>release</code></p>
 <hr>
 <p><strong>ARC 在运行时做了哪些工作</strong></p>
 <p>待查~</p>
@@ -509,7 +518,8 @@
 <p>内存5大区:堆,栈,方法区,全局区,常量区<br>栈:不需要手动管理内存,会自动清理栈中的内存<br>堆: 需要手动管理内存<br>静态区:又称全局区<br>常量区: 储存常量的地方<br>方法区: 存放函数体的二进制代码</p>
 <hr>
 <p><strong>是否了解 深拷贝 和 浅拷贝 的概念，集合类深拷贝如何实现？</strong></p>
-<p>待查~</p>
+<p><code>深拷贝</code>是内存拷贝，指向的是不同的内存<br><code>浅拷贝</code>是指针拷贝，指向的是同一块内存</p>
+<p>集合类深拷贝是通过归档、解档实现。</p>
 <hr>
 <p><strong>BAD_ACCESS 在什么情况下出现?</strong></p>
 <ul>
@@ -517,7 +527,7 @@
 <li>死循环</li>
 </ul>
 <hr>
-<h1 id="0x02-Runtime"><a href="#0x02-Runtime" class="headerlink" title="0x02 Runtime"></a>0x02 Runtime</h1><p><strong>类对象的数据结构？</strong></p>
+<h2 id="0x02-Runtime"><a href="#0x02-Runtime" class="headerlink" title="0x02 Runtime"></a>0x02 Runtime</h2><p><strong>类对象的数据结构？</strong></p>
 <p>Objective-C类是由<code>Class</code>类型来表示的，它实际上是一个指向<code>objc_class</code>结构体的指针。它的定义如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">typedef struct objc_class *Class;</div></pre></td></tr></table></figure>
 <p>查看<code>objc/runtime.h</code>中<code>objc_class</code>结构体的定义如下：</p>
@@ -589,10 +599,166 @@
 <p><a href="http://www.cnblogs.com/csutanyu/archive/2011/12/12/Objective-C_memory_layout.html" target="_blank" rel="external">Objective-C内存布局</a></p>
 <p><a href="http://www.cocoachina.com/industry/20131210/7508.html" target="_blank" rel="external">Objective-C 中的 Meta-class 是什么？</a></p>
 <hr>
+<p><strong><code>Obj-C</code> 中的类信息存放在哪里？</strong></p>
+<p>类方法存储在元类。</p>
+<p>当前类的信息都在 <code>data</code> 里。看看源码就知道了。</p>
+<hr>
 <p><strong>一个 NSObject 对象占用多少内存空间？</strong></p>
 <p>通过 <code>size_t class_getInstanceSize ( Class cls )</code>接口可以获取<code>NSObject</code> 对象占用内存空间大小。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">size_t z = class_getInstanceSize([NSObject class]);</div><div class="line"></div><div class="line">//输出 </div><div class="line">(lldb) p z</div><div class="line">(size_t) $0 = 8</div><div class="line"></div><div class="line">单位是 byte</div></pre></td></tr></table></figure>
 <hr>
 <p><strong>说一下对 <code>class_rw_t</code> 的理解？</strong></p>
+<p><code>rw</code>代表可读可写。</p>
+<p><code>ObjC</code> 类中的属性、方法还有遵循的协议等信息都保存在 <code>class_rw_t</code> 中：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">struct class_rw_t &#123;  </div><div class="line">    uint32_t flags;</div><div class="line">    uint32_t version;</div><div class="line"></div><div class="line">    const class_ro_t *ro;</div><div class="line"></div><div class="line">    method_array_t methods;</div><div class="line">    property_array_t properties;</div><div class="line">    protocol_array_t protocols;</div><div class="line"></div><div class="line">    Class firstSubclass;</div><div class="line">    Class nextSiblingClass;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>其中还有一个指向常量的指针 <code>ro</code>，其中存储了当前类在编译期就已经确定的属性、方法以及遵循的协议</p>
+<p>参考：</p>
+<p><a href="http://www.cocoachina.com/ios/20160518/16322.html" target="_blank" rel="external">深入解析 Objective-C 中方法的结构</a></p>
+<hr>
+<p><strong>说一下对 <code>class_ro_t</code> 的理解？</strong></p>
+<p>储了当前类在编译期就已经确定的属性、方法以及遵循的协议。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">struct class_ro_t &#123;  </div><div class="line">    uint32_t flags;</div><div class="line">    uint32_t instanceStart;</div><div class="line">    uint32_t instanceSize;</div><div class="line">    uint32_t reserved;</div><div class="line"></div><div class="line">    const uint8_t * ivarLayout;</div><div class="line"></div><div class="line">    const char * name;</div><div class="line">    method_list_t * baseMethodList;</div><div class="line">    protocol_list_t * baseProtocols;</div><div class="line">    const ivar_list_t * ivars;</div><div class="line"></div><div class="line">    const uint8_t * weakIvarLayout;</div><div class="line">    property_list_t *baseProperties;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>参考：</p>
+<p><a href="http://www.cocoachina.com/ios/20160518/16322.html" target="_blank" rel="external">深入解析 Objective-C 中方法的结构</a></p>
+<hr>
+<p><strong>说一下 <code>Runtime</code> 消息解析和转发</strong></p>
+<p>先看一下流程图：</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/04/17/面试知识点整理/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/28/工作记录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="朝元">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="朝元的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/03/28/工作记录/" itemprop="url">工作笔记</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-28T10:49:24+08:00">
+                2018-03-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>1、根据 text 和字体大小返回 size</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">CGSize topTilteSize = [KGCommonTools sizeForString:topTilte.text font:topTilte.font];</div></pre></td></tr></table></figure>
+<hr>
+<p>2、<code>ceil(xx)</code>函数</p>
+<p>函数名: ceil</p>
+<p>用 法: double ceil(double x);</p>
+<p>功 能: 返回大于或者等于指定表达式的最小整数</p>
+<p>头文件:math.h</p>
+<hr>
+<p>3、UIButton 的一个分类，扩大 button 本身的点击响应范围</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">#import &lt;UIKit/UIKit.h&gt;</div><div class="line">#import &lt;objc/runtime.h&gt;</div><div class="line"></div><div class="line">@interface UIButton (EnlargeEdge)</div><div class="line"></div><div class="line">- (void)setEnlargeEdge:(CGFloat)size;</div><div class="line"></div><div class="line">- (void)setEnlargeEdgeWithTop:(CGFloat)top bottom:(CGFloat)bottom left:(CGFloat)left right:(CGFloat)right;</div><div class="line"></div><div class="line">@end</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div></pre></td><td class="code"><pre><div class="line">#import &quot;UIButton+EnlargeEdge.h&quot;</div><div class="line"></div><div class="line">@implementation UIButton (EnlargeEdge)</div><div class="line"></div><div class="line">static char topNameKey;</div><div class="line">static char leftNameKey;</div><div class="line">static char rightNameKey;</div><div class="line">static char bottomNameKey;</div><div class="line"></div><div class="line">- (void)setEnlargeEdge:(CGFloat)size</div><div class="line">&#123;</div><div class="line">    objc_setAssociatedObject(self, &amp;topNameKey, [NSNumber numberWithFloat:size], OBJC_ASSOCIATION_RETAIN_NONATOMIC);</div><div class="line">    objc_setAssociatedObject(self, &amp;leftNameKey, [NSNumber numberWithFloat:size], OBJC_ASSOCIATION_RETAIN_NONATOMIC);</div><div class="line">    objc_setAssociatedObject(self, &amp;rightNameKey, [NSNumber numberWithFloat:size], OBJC_ASSOCIATION_RETAIN_NONATOMIC);</div><div class="line">    objc_setAssociatedObject(self, &amp;bottomNameKey, [NSNumber numberWithFloat:size], OBJC_ASSOCIATION_RETAIN_NONATOMIC);</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (void)setEnlargeEdgeWithTop:(CGFloat)top bottom:(CGFloat)bottom left:(CGFloat)left right:(CGFloat)right</div><div class="line">&#123;</div><div class="line">    objc_setAssociatedObject(self, &amp;topNameKey, [NSNumber numberWithFloat:top], OBJC_ASSOCIATION_RETAIN_NONATOMIC);</div><div class="line">    objc_setAssociatedObject(self, &amp;leftNameKey, [NSNumber numberWithFloat:left], OBJC_ASSOCIATION_RETAIN_NONATOMIC);</div><div class="line">    objc_setAssociatedObject(self, &amp;rightNameKey, [NSNumber numberWithFloat:right], OBJC_ASSOCIATION_RETAIN_NONATOMIC);</div><div class="line">    objc_setAssociatedObject(self, &amp;bottomNameKey, [NSNumber numberWithFloat:bottom], OBJC_ASSOCIATION_RETAIN_NONATOMIC);</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (CGRect)enlargedRect</div><div class="line">&#123;</div><div class="line">    NSNumber *topEdge = objc_getAssociatedObject(self, &amp;topNameKey);</div><div class="line">    NSNumber *leftEdge = objc_getAssociatedObject(self, &amp;leftNameKey);</div><div class="line">    NSNumber *rightEdge = objc_getAssociatedObject(self, &amp;rightNameKey);</div><div class="line">    NSNumber *bottomEdge = objc_getAssociatedObject(self, &amp;bottomNameKey);</div><div class="line">    </div><div class="line">    if (topEdge &amp;&amp; bottomEdge &amp;&amp; leftEdge &amp;&amp; rightEdge) &#123;</div><div class="line">        return CGRectMake(self.bounds.origin.x - leftEdge.floatValue,</div><div class="line">                          self.bounds.origin.y - topEdge.floatValue,</div><div class="line">                          self.bounds.size.width + leftEdge.floatValue + rightEdge.floatValue,</div><div class="line">                          self.bounds.size.height + topEdge.floatValue + bottomEdge.floatValue);</div><div class="line">    &#125; else &#123;</div><div class="line">        return self.bounds;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event</div><div class="line">&#123;</div><div class="line">    CGRect rect = [self enlargedRect];</div><div class="line">    if (CGRectEqualToRect(rect, self.bounds)) &#123;</div><div class="line">        return [super pointInside:point withEvent:event];</div><div class="line">    &#125;</div><div class="line">    return CGRectContainsPoint(rect, point) ? YES : NO;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//Should Not Override hitTest: directly!</div><div class="line"></div><div class="line">//- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event</div><div class="line">//&#123;</div><div class="line">//    CGRect rect = [self enlargedRect];</div><div class="line">//    if (CGRectEqualToRect(rect, self.bounds))</div><div class="line">//    &#123;</div><div class="line">//        return [super hitTest:point withEvent:event];</div><div class="line">//    &#125;</div><div class="line">//    return CGRectContainsPoint(rect, point) ? self : nil;</div><div class="line">//&#125;</div><div class="line"></div><div class="line"></div><div class="line">@end</div></pre></td></tr></table></figure>
+<p>使用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[cell.downloadBtn setEnlargeEdgeWithTop:15 bottom:15 left:7.5 right:15]; // 扩大点击范围</div></pre></td></tr></table></figure>
+<p>参考链接：</p>
+<p><a href="https://www.jianshu.com/p/d8512dff2b3e" target="_blank" rel="external">iOS事件响应链中Hit-Test View的应用</a></p>
+<p>4、解决阴影和圆角不能同时共存的问题</p>
+<p>参考：</p>
+<p><a href="http://www.cocoachina.com/bbs/read.php?tid-324184.html" target="_blank" rel="external">如何让阴影和圆角同时实现</a></p>
+<p>5.</p>
 
           
         
@@ -1447,122 +1613,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/31/常用排序算法/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="朝元">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="朝元的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/05/31/常用排序算法/" itemprop="url">常用排序算法</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-31T11:58:05+08:00">
-                2017-05-31
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="选择排序"><a href="#选择排序" class="headerlink" title="选择排序"></a>选择排序</h1>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/05/31/常用排序算法/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1612,7 +1662,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">35</span>
+                <span class="site-state-item-count">36</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
